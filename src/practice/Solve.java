@@ -5,7 +5,7 @@ import java.text.DecimalFormat;
 import javax.swing.*;
 
 public class Solve extends JFrame implements ActionListener {
-    double[] t = new double[]{0.0D, 0.0D, 1.84D, 1.32D, 1.2D, 1.14D, 1.11D, 1.09D, 1.08D, 1.07D, 1.06D, 1.05D, 1.03D};
+    double[] t = new double[]{0.0, 0.0, 1.84, 1.32, 1.2, 1.14, 1.11, 1.09, 1.08, 1.07, 1.06, 1.05, 1.03};
     double[] x = new double[20];
     double[] y = new double[20];
     int xcount;
@@ -133,13 +133,11 @@ public class Solve extends JFrame implements ActionListener {
                 badvalue = badvalue + this.x[i] + " ";
             }
         }
-
         if (flag) {
-            this.tf3.setText(badvalue);
+            this.tf3.setText("2sigma为--->"+standard+"\n"+badvalue);
         } else {
-            this.tf3.setText("无坏值");
+            this.tf3.setText("2sigma为--->"+standard+"\n无坏值");
         }
-
     }
 
     double xfangba(double[] data, int cnt) {
@@ -188,63 +186,30 @@ public class Solve extends JFrame implements ActionListener {
     }
 
     public void actionPerformed(ActionEvent e) {
-        String var2 = e.getActionCommand();
-        byte var3 = -1;
-        switch(var2.hashCode()) {
-            case -2080220204:
-                if (var2.equals("不确定度A")) {
-                    var3 = 1;
-                }
-                break;
-            case -1133426706:
-                if (var2.equals("线性回归方程")) {
-                    var3 = 4;
-                }
-                break;
-            case -981913880:
-                if (var2.equals("检测1次坏值")) {
-                    var3 = 2;
-                }
-                break;
-            case -891837480:
-                if (var2.equals("线性相关系数")) {
-                    var3 = 3;
-                }
-                break;
-            case 747904174:
-                if (var2.equals("录入数据")) {
-                    var3 = 0;
-                }
-                break;
-            case 870025171:
-                if (var2.equals("清空数据")) {
-                    var3 = 5;
-                }
-        }
-
+        String method = e.getActionCommand();
         double result;
-        switch (var3) {
-            case 0 -> {
+        switch (method) {
+            case "录入数据" -> {
                 this.getXData(this.tfx.getText());
                 this.getYData(this.tfy.getText());
                 this.tf3.setText("成功！");
             }
-            case 1 -> {
+            case "不确定度A" -> {
                 result = this.solve_uncertainty(this.x, this.xcount);
                 DecimalFormat myformat = new DecimalFormat("0.0000000");
                 String str = myformat.format(result);
                 this.tf3.setText(str);
             }
-            case 2 -> this.find_Badvalue();
-            case 3 -> {
+            case "检测1次坏值" -> this.find_Badvalue();
+            case "线性相关系数" -> {
                 result = this.solve_r(this.x, this.y, this.xcount);
                 this.tf3.setText("r = " + result);
             }
-            case 4 -> {
+            case "线性回归方程" -> {
                 String s = this.solve_linefc(this.x, this.y, this.xcount);
                 this.tf3.setText(s);
             }
-            case 5 -> {
+            case "清空数据" -> {
                 this.x = new double[20];
                 this.y = new double[20];
                 this.xcount = 0;
@@ -254,6 +219,5 @@ public class Solve extends JFrame implements ActionListener {
                 this.tf3.setText("");
             }
         }
-
     }
 }
